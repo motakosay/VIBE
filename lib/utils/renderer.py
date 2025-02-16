@@ -18,22 +18,13 @@ import math
 import trimesh
 import pyrender
 import numpy as np
+import bpy  # Ensure Blender's bpy module is available
 from pyrender.constants import RenderFlags
 from lib.models.smpl import get_smpl_faces
 
-
 class WeakPerspectiveCamera(pyrender.Camera):
-    def __init__(self,
-                 scale,
-                 translation,
-                 znear=pyrender.camera.DEFAULT_Z_NEAR,
-                 zfar=None,
-                 name=None):
-        super(WeakPerspectiveCamera, self).__init__(
-            znear=znear,
-            zfar=zfar,
-            name=name,
-        )
+    def __init__(self, scale, translation, znear=pyrender.camera.DEFAULT_Z_NEAR, zfar=None, name=None):
+        super(WeakPerspectiveCamera, self).__init__(znear=znear, zfar=zfar, name=name)
         self.scale = scale
         self.translation = translation
 
@@ -46,47 +37,48 @@ class WeakPerspectiveCamera(pyrender.Camera):
         P[2, 2] = -1
         return P
 
-
 class Renderer:
     def __init__(self, resolution=(224,224), orig_img=False, wireframe=False):
         self.resolution = resolution
-
         self.faces = get_smpl_faces()
         self.orig_img = orig_img
         self.wireframe = wireframe
-        self.renderer = pyrender.OffscreenRenderer(
-            viewport_width=self.resolution[0],
-            viewport_height=self.resolution[1],
-            point_size=1.0
-        )
-
-        # set the scene
+        self.renderer = pyrender.OffscreenRenderer(viewport_width=self.resolution[0], viewport_height=self.resolution[1], point_size=1.0)
         self.scene = pyrender.Scene(bg_color=[0.0, 0.0, 0.0, 0.0], ambient_light=(0.3, 0.3, 0.3))
 
         light = pyrender.PointLight(color=[1.0, 1.0, 1.0], intensity=1)
-
         light_pose = np.eye(4)
         light_pose[:3, 3] = [0, -1, 1]
         self.scene.add(light, pose=light_pose)
-
         light_pose[:3, 3] = [0, 1, 1]
         self.scene.add(light, pose=light_pose)
-
         light_pose[:3, 3] = [1, 1, 2]
         self.scene.add(light, pose=light_pose)
 
-    def render(self, img, verts, cam, angle=None, axis=None, mesh_filename=None, color=[1.0, 1.0, 0.9]):
-        mesh = trimesh.Trimesh(vertices=verts, faces=self.faces, process=False)
+    def export_camera_to_fbx(self, camera, filename):
+        # Create a new Blender scene
+        bpy.ops.wm.read_factory_settings(use_empty=True)
+        
+        # Create a new camera
+        cam_data = bpy.data.cameras.new("Camera")
+        cam_object = bpy.data.objects.new("Camera", cam_data)
+        bpy.context.collection.objects.link(cam_object)
+        bpy.context.view_layer.objects.active = cam_object
+        cam_object.select_set(True)
+        
+        # Set camera properties
+        cam_object.location = camera.translation
+        cam_object.scale = camera.scale
+        
+        # Export to FBX
+        bpy.ops.export_scene.fbx(filepath=filename, use_selection=True, add_leaf_bones=False)
 
+    def render(self, img, verts, cam, angle=None, axis=None, mesh_filename=None, camera_filename=None, color=[1.0, 1.0, 0.9]):
+        mesh = trimesh.Trimesh(vertices=verts, faces=self.faces, process=False)
         Rx = trimesh.transformations.rotation_matrix(math.radians(180), [1, 0, 0])
         mesh.apply_transform(Rx)
 
         if mesh_filename is not None:
-            # Apply camera transformations
-            translation_matrix = trimesh.transformations.translation_matrix(cam[1:])
-            scale_matrix = trimesh.transformations.scale_matrix(cam[0])
-            mesh.apply_transform(translation_matrix)
-            mesh.apply_transform(scale_matrix)
             mesh.export(mesh_filename)
 
         if angle and axis:
@@ -94,21 +86,14 @@ class Renderer:
             mesh.apply_transform(R)
 
         sx, sy, tx, ty = cam
-        camera = WeakPerspectiveCamera(
-            scale=[sx, sy],
-            translation=[tx, ty],
-            zfar=1000.
-        )
+        camera = WeakPerspectiveCamera(scale=[sx, sy], translation=[tx, ty], zfar=1000.)
 
-        material = pyrender.MetallicRoughnessMaterial(
-            metallicFactor=0.0,
-            alphaMode='OPAQUE',
-            baseColorFactor=(color[0], color[1], color[2], 1.0)
-        )
+        if camera_filename is not None:
+            self.export_camera_to_fbx(camera, camera_filename)
 
+        material = pyrender.MetallicRoughnessMaterial(metallicFactor=0.0, alphaMode='OPAQUE', baseColorFactor=(color[0], color[1], color[2], 1.0))
         mesh = pyrender.Mesh.from_trimesh(mesh, material=material)
         mesh_node = self.scene.add(mesh, 'mesh')
-
         camera_pose = np.eye(4)
         cam_node = self.scene.add(camera, pose=camera_pose)
 
