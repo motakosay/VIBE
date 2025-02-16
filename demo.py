@@ -316,6 +316,8 @@ def main(args):
                     cam=frame_cam,
                     color=mc,
                     mesh_filename=mesh_filename,
+                    camera_name=args.camera_name,
+                    model_name=args.model_name
                 )
 
                 if args.sideview:
