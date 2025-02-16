@@ -75,54 +75,54 @@ class Renderer:
         light_pose[:3, 3] = [1, 1, 2]
         self.scene.add(light, pose=light_pose)
 
-def render(self, img, verts, cam, angle=None, axis=None, mesh_filename=None, color=[1.0, 1.0, 0.9]):
-    mesh = trimesh.Trimesh(vertices=verts, faces=self.faces, process=False)
+    def render(self, img, verts, cam, angle=None, axis=None, mesh_filename=None, color=[1.0, 1.0, 0.9]):
+        mesh = trimesh.Trimesh(vertices=verts, faces=self.faces, process=False)
 
-    Rx = trimesh.transformations.rotation_matrix(math.radians(180), [1, 0, 0])
-    mesh.apply_transform(Rx)
+        Rx = trimesh.transformations.rotation_matrix(math.radians(180), [1, 0, 0])
+        mesh.apply_transform(Rx)
 
-    if mesh_filename is not None:
-        # Apply camera transformations
-        translation_matrix = trimesh.transformations.translation_matrix(cam[1:])
-        scale_matrix = trimesh.transformations.scale_matrix(cam[0])
-        mesh.apply_transform(translation_matrix)
-        mesh.apply_transform(scale_matrix)
-        mesh.export(mesh_filename)
+        if mesh_filename is not None:
+            # Apply camera transformations
+            translation_matrix = trimesh.transformations.translation_matrix(cam[1:])
+            scale_matrix = trimesh.transformations.scale_matrix(cam[0])
+            mesh.apply_transform(translation_matrix)
+            mesh.apply_transform(scale_matrix)
+            mesh.export(mesh_filename)
 
-    if angle and axis:
-        R = trimesh.transformations.rotation_matrix(math.radians(angle), axis)
-        mesh.apply_transform(R)
+        if angle and axis:
+            R = trimesh.transformations.rotation_matrix(math.radians(angle), axis)
+            mesh.apply_transform(R)
 
-    sx, sy, tx, ty = cam
-    camera = WeakPerspectiveCamera(
-        scale=[sx, sy],
-        translation=[tx, ty],
-        zfar=1000.
-    )
+        sx, sy, tx, ty = cam
+        camera = WeakPerspectiveCamera(
+            scale=[sx, sy],
+            translation=[tx, ty],
+            zfar=1000.
+        )
 
-    material = pyrender.MetallicRoughnessMaterial(
-        metallicFactor=0.0,
-        alphaMode='OPAQUE',
-        baseColorFactor=(color[0], color[1], color[2], 1.0)
-    )
+        material = pyrender.MetallicRoughnessMaterial(
+            metallicFactor=0.0,
+            alphaMode='OPAQUE',
+            baseColorFactor=(color[0], color[1], color[2], 1.0)
+        )
 
-    mesh = pyrender.Mesh.from_trimesh(mesh, material=material)
-    mesh_node = self.scene.add(mesh, 'mesh')
+        mesh = pyrender.Mesh.from_trimesh(mesh, material=material)
+        mesh_node = self.scene.add(mesh, 'mesh')
 
-    camera_pose = np.eye(4)
-    cam_node = self.scene.add(camera, pose=camera_pose)
+        camera_pose = np.eye(4)
+        cam_node = self.scene.add(camera, pose=camera_pose)
 
-    if self.wireframe:
-        render_flags = RenderFlags.RGBA | RenderFlags.ALL_WIREFRAME
-    else:
-        render_flags = RenderFlags.RGBA
+        if self.wireframe:
+            render_flags = RenderFlags.RGBA | RenderFlags.ALL_WIREFRAME
+        else:
+            render_flags = RenderFlags.RGBA
 
-    rgb, _ = self.renderer.render(self.scene, flags=render_flags)
-    valid_mask = (rgb[:, :, -1] > 0)[:, :, np.newaxis]
-    output_img = rgb[:, :, :-1] * valid_mask + (1 - valid_mask) * img
-    image = output_img.astype(np.uint8)
+        rgb, _ = self.renderer.render(self.scene, flags=render_flags)
+        valid_mask = (rgb[:, :, -1] > 0)[:, :, np.newaxis]
+        output_img = rgb[:, :, :-1] * valid_mask + (1 - valid_mask) * img
+        image = output_img.astype(np.uint8)
 
-    self.scene.remove_node(mesh_node)
-    self.scene.remove_node(cam_node)
+        self.scene.remove_node(mesh_node)
+        self.scene.remove_node(cam_node)
 
-    return image
+        return image
