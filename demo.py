@@ -411,6 +411,12 @@ if __name__ == '__main__':
                         help='one euro filter beta. '
                              'Increasing the speed coefficient(beta) decreases speed lag.')
 
+    parser.add_argument('--camera_name', type=str, default='Camera',
+                        help='name of the camera to be exported')
+
+    parser.add_argument('--model_name', type=str, default='Model',
+                        help='name of the model to be exported')
+
     args = parser.parse_args()
 
     main(args)
