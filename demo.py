@@ -20,13 +20,16 @@ os.environ['PYOPENGL_PLATFORM'] = 'egl'
 import cv2
 import time
 import torch
+#import torchvision
+print(torch.__version__, torchvision.__version__)
+"""
 import joblib
 import shutil
 import colorsys
 import argparse
 import numpy as np
 from tqdm import tqdm
-from multi_person_tracker import MPT
+from multipersontracker.multi_person_tracker import MPT
 from torch.utils.data import DataLoader
 
 from lib.models.vibe import VIBE_Demo
@@ -51,7 +54,7 @@ MIN_NUM_FRAMES = 25
 
 
 def main(args):
-    device = torch.device('cpu')
+    device = torch.device('cuda') if torch.cuda.is_available() else torch.device('cpu')
 
     video_file = args.vid_file
 
@@ -316,6 +319,8 @@ def main(args):
                     cam=frame_cam,
                     color=mc,
                     mesh_filename=mesh_filename,
+                    camera_name=args.camera_name,
+                    model_name=args.model_name
                 )
 
                 if args.sideview:
@@ -409,6 +414,13 @@ if __name__ == '__main__':
                         help='one euro filter beta. '
                              'Increasing the speed coefficient(beta) decreases speed lag.')
 
+    parser.add_argument('--camera_name', type=str, default='Camera',
+                        help='name of the camera to be exported')
+
+    parser.add_argument('--model_name', type=str, default='Model',
+                        help='name of the model to be exported')
+
     args = parser.parse_args()
 
     main(args)
+"""
