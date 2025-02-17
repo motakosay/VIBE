@@ -302,7 +302,7 @@ def estimate_translation(S, joints_2d, focal_length=5000., img_size=224.):
         joints_i = joints_2d[i]
         conf_i = joints_conf[i]
         trans[i] = estimate_translation_np(S_i, joints_i, conf_i, focal_length=focal_length, img_size=img_size)
-    return torch.from_numpy(trans).to(device)
+    return torch.from_numpy(trans).to(cpu)
 
 
 def rot6d_to_rotmat_spin(x):
