@@ -108,7 +108,7 @@ def main(args):
         hidden_size=1024,
         add_linear=True,
         use_residual=True,
-    ).to(device)
+    ).to(cpu)
 
     # ========= Load pretrained weights ========= #
     pretrained_file = download_ckpt(use_3dpw=False)
@@ -157,7 +157,7 @@ def main(args):
                     norm_joints2d.append(nj2d.numpy().reshape(-1, 21, 3))
 
                 batch = batch.unsqueeze(0)
-                batch = batch.to(device)
+                batch = batch.to(cpu)
 
                 batch_size, seqlen = batch.shape[:2]
                 output = model(batch)[-1]
@@ -182,7 +182,7 @@ def main(args):
         if args.run_smplify and args.tracking_method == 'pose':
             norm_joints2d = np.concatenate(norm_joints2d, axis=0)
             norm_joints2d = convert_kps(norm_joints2d, src='staf', dst='spin')
-            norm_joints2d = torch.from_numpy(norm_joints2d).float().to(device)
+            norm_joints2d = torch.from_numpy(norm_joints2d).float().to(cpu)
 
             # Run Temporal SMPLify
             update, new_opt_vertices, new_opt_cam, new_opt_pose, new_opt_betas, \
