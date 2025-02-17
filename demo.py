@@ -20,7 +20,7 @@ os.environ['PYOPENGL_PLATFORM'] = 'egl'
 import cv2
 import time
 import torch
-import torchvision
+#import torchvision
 print(torch.__version__, torchvision.__version__)
 """
 import joblib
