@@ -70,12 +70,12 @@ def extract_features(model, video, bbox, debug=False, batch_size=200, kp_2d=None
     if dataset == 'insta':
         video = torch.cat(
             [convert_cvimg_to_tensor(image).unsqueeze(0) for image in video], dim=0
-        ).to(device)
+        ).to(cpu)
     else:
         # crop bbox locations
         video = torch.cat(
             [get_single_image_crop(image, bbox, scale=scale).unsqueeze(0) for image, bbox in zip(video, bbox)], dim=0
-        ).to(device)
+        ).to(cpu)
 
     features = []
 
