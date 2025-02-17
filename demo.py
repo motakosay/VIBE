@@ -20,6 +20,9 @@ os.environ['PYOPENGL_PLATFORM'] = 'egl'
 import cv2
 import time
 import torch
+import torchvision
+print(torch.__version__, torchvision.__version__)
+"""
 import joblib
 import shutil
 import colorsys
@@ -420,3 +423,4 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     main(args)
+"""
