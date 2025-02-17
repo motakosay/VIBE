@@ -442,9 +442,9 @@ def get_regressor_output(features):
 
     device = 'cuda' if torch.cuda.is_available() else 'cpu'
 
-    model = Regressor().to(device)
+    model = Regressor().to(cpu)
 
-    smpl = SMPL(SMPL_MODEL_DIR).to(device)
+    smpl = SMPL(SMPL_MODEL_DIR).to(cpu)
     pretrained = torch.load('models/model_best.pth.tar')['gen_state_dict']
 
     new_pretrained_dict = {}
@@ -457,7 +457,7 @@ def get_regressor_output(features):
 
     model.load_state_dict(new_pretrained_dict, strict=False)
     features = features.reshape(batch_size*seqlen, -1)
-    features = features.to(device)
+    features = features.to(cpu)
     theta = model(features)[-1]
 
     cam = theta[:, 0:3].contiguous()
