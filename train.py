@@ -78,7 +78,7 @@ def main(cfg):
         add_linear=cfg.MODEL.TGRU.ADD_LINEAR,
         bidirectional=cfg.MODEL.TGRU.BIDIRECTIONAL,
         use_residual=cfg.MODEL.TGRU.RESIDUAL,
-    ).to(cfg.DEVICE)
+    ).to(cpu)
 
     if cfg.TRAIN.PRETRAINED != '' and os.path.isfile(cfg.TRAIN.PRETRAINED):
         checkpoint = torch.load(cfg.TRAIN.PRETRAINED)
@@ -106,7 +106,7 @@ def main(cfg):
         attention_size=None if cfg.TRAIN.MOT_DISCR.FEATURE_POOL !='attention' else cfg.TRAIN.MOT_DISCR.ATT.SIZE,
         attention_layers=None if cfg.TRAIN.MOT_DISCR.FEATURE_POOL !='attention' else cfg.TRAIN.MOT_DISCR.ATT.LAYERS,
         attention_dropout=None if cfg.TRAIN.MOT_DISCR.FEATURE_POOL !='attention' else cfg.TRAIN.MOT_DISCR.ATT.DROPOUT
-    ).to(cfg.DEVICE)
+    ).to(cpu)
 
     dis_motion_optimizer = get_optimizer(
         model=motion_discriminator,
@@ -143,7 +143,7 @@ def main(cfg):
         gen_optimizer=gen_optimizer,
         start_epoch=cfg.TRAIN.START_EPOCH,
         end_epoch=cfg.TRAIN.END_EPOCH,
-        device=cfg.DEVICE,
+        device=cpu,
         writer=writer,
         debug=cfg.DEBUG,
         logdir=cfg.LOGDIR,
