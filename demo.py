@@ -51,7 +51,7 @@ MIN_NUM_FRAMES = 25
 
 
 def main(args):
-    device = torch.device('cuda') if torch.cuda.is_available() else torch.device('cpu')
+    device = torch.device('cpu')
 
     video_file = args.vid_file
 
