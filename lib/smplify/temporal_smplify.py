@@ -48,7 +48,7 @@ class TemporalSMPLify():
         # GMM pose prior
         self.pose_prior = MaxMixturePrior(prior_folder=VIBE_DATA_DIR,
                                           num_gaussians=8,
-                                          dtype=torch.float32).to(device)
+                                          dtype=torch.float32).to(cpu)
         self.use_lbfgs = use_lbfgs
         # Load SMPL model
         self.smpl = SMPL(SMPL_MODEL_DIR,
