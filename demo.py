@@ -26,7 +26,7 @@ import colorsys
 import argparse
 import numpy as np
 from tqdm import tqdm
-from multi_person_tracker import MPT
+from multi-person-tracker.multi_person_tracker import MPT
 from torch.utils.data import DataLoader
 
 from lib.models.vibe import VIBE_Demo
