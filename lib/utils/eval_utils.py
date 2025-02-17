@@ -67,10 +67,10 @@ def compute_error_verts(pred_verts, target_verts=None, target_theta=None):
         smpl = SMPL(
             SMPL_MODEL_DIR,
             batch_size=1, # target_theta.shape[0],
-        ).to(device)
+        ).to(cpu)
 
-        betas = torch.from_numpy(target_theta[:,75:]).to(device)
-        pose = torch.from_numpy(target_theta[:,3:75]).to(device)
+        betas = torch.from_numpy(target_theta[:,75:]).to(cpu)
+        pose = torch.from_numpy(target_theta[:,3:75]).to(cpu)
 
         target_verts = []
         b_ = torch.split(betas, 5000)
