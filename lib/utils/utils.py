@@ -31,9 +31,9 @@ def move_dict_to_device(dict, device, tensor2float=False):
     for k,v in dict.items():
         if isinstance(v, torch.Tensor):
             if tensor2float:
-                dict[k] = v.float().to(device)
+                dict[k] = v.float().to(cpu)
             else:
-                dict[k] = v.to(device)
+                dict[k] = v.to(cpu)
 
 
 def get_from_dict(dict, keys):
