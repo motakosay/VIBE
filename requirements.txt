@@ -9,7 +9,7 @@ gdown==4.5.1
 PyYAML==5.3.1
 joblib==0.14.1
 pillow==7.1.0
-trimesh==3.5.25
+trimesh==4.6.2
 pyrender==0.1.36
 progress==1.5
 filterpy==1.4.5
