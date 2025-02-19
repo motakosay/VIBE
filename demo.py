@@ -113,7 +113,7 @@ def main(args):
 
     # ========= Load pretrained weights ========= #
     pretrained_file = download_ckpt(use_3dpw=False)
-    ckpt = torch.load(pretrained_file, map_location=torch.device('cpu'))
+    ckpt = torch.load(pretrained_file, map_location=torch.device('cpu'), weights_only=True)
     print(f'Performance of pretrained model on 3DPW: {ckpt["performance"]}')
     ckpt = ckpt['gen_state_dict']
     model.load_state_dict(ckpt, strict=False)
@@ -317,8 +317,6 @@ def main(args):
                     cam=frame_cam,
                     color=mc,
                     mesh_filename=mesh_filename,
-                    camera_name=args.camera_name,
-                    model_name=args.model_name
                 )
 
                 if args.sideview:
