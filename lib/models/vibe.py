@@ -93,7 +93,7 @@ class VIBE(nn.Module):
         self.regressor = Regressor()
 
         if pretrained and os.path.isfile(pretrained):
-            pretrained_dict = torch.load(pretrained, map_location=torch.device('cpu'))['model']
+            pretrained_dict = torch.load(pretrained, map_location=torch.device('cpu'), weights_only=True)['model']
 
             self.regressor.load_state_dict(pretrained_dict, strict=False)
             print(f'=> loaded pretrained model from \'{pretrained}\'')
@@ -151,7 +151,7 @@ class VIBE_Demo(nn.Module):
         self.regressor = Regressor()
 
         if pretrained and os.path.isfile(pretrained):
-            pretrained_dict = torch.load(pretrained, map_location=torch.device('cpu'))['model']
+            pretrained_dict = torch.load(pretrained, map_location=torch.device('cpu'), weights_only=True)['model']
 
             self.regressor.load_state_dict(pretrained_dict, strict=False)
             print(f'=> loaded pretrained model from \'{pretrained}\'')
