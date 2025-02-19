@@ -2,7 +2,8 @@
 
 mkdir -p data
 cd data
-gdown --id 1untXhYOLQtpNEy4GTY_0fL_H-k6cTf_r --fuzzy
+#gdown --id 1untXhYOLQtpNEy4GTY_0fL_H-k6cTf_r --fuzzy
+mv /content/vibe_data.zip /content/vibe/data/
 unzip vibe_data.zip
 rm vibe_data.zip
 cd ..
