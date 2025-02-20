@@ -311,6 +311,7 @@ def main(args):
                     mesh_folder = os.path.join(output_path, 'meshes', f'{person_id:04d}')
                     os.makedirs(mesh_folder, exist_ok=True)
                     mesh_filename = os.path.join(mesh_folder, f'{frame_idx:06d}.obj')
+                    camera_filename = os.path.join(mesh_folder, f'{frame_idx:06d}_camera.fbx')
 
                 img = renderer.render(
                     img,
