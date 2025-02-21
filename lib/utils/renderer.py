@@ -73,7 +73,7 @@ class Renderer:
         # Export to FBX
         bpy.ops.export_scene.fbx(filepath=filename, use_selection=True, add_leaf_bones=False)
 """
-    def render(self, img, verts, cam, angle=None, axis=None, mesh_filename=None, camera_filename=None, color=[1.0, 1.0, 0.9]):
+    def render(self, img, verts, cam, angle=None, axis=None, mesh_filename=None, color=[1.0, 1.0, 0.9]):
         mesh = trimesh.Trimesh(vertices=verts, faces=self.faces, process=False)
         Rx = trimesh.transformations.rotation_matrix(math.radians(180), [1, 0, 0])
         mesh.apply_transform(Rx)
@@ -88,8 +88,8 @@ class Renderer:
         sx, sy, tx, ty = cam
         camera = WeakPerspectiveCamera(scale=[sx, sy], translation=[tx, ty], zfar=1000.)
 
-        if camera_filename is not None:
-            self.export_camera_to_fbx(camera, camera_filename)
+        #if camera_filename is not None:
+            #self.export_camera_to_fbx(camera, camera_filename)
 
         material = pyrender.MetallicRoughnessMaterial(metallicFactor=0.0, alphaMode='OPAQUE', baseColorFactor=(color[0], color[1], color[2], 1.0))
         mesh = pyrender.Mesh.from_trimesh(mesh, material=material)
