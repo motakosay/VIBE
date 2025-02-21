@@ -54,25 +54,7 @@ class Renderer:
         self.scene.add(light, pose=light_pose)
         light_pose[:3, 3] = [1, 1, 2]
         self.scene.add(light, pose=light_pose)
-"""
-    def export_camera_to_fbx(self, camera, filename):
-        # Create a new Blender scene
-        bpy.ops.wm.read_factory_settings(use_empty=True)
-        
-        # Create a new camera
-        cam_data = bpy.data.cameras.new("Camera")
-        cam_object = bpy.data.objects.new("Camera", cam_data)
-        bpy.context.collection.objects.link(cam_object)
-        bpy.context.view_layer.objects.active = cam_object
-        cam_object.select_set(True)
-        
-        # Set camera properties
-        cam_object.location = camera.translation
-        cam_object.scale = camera.scale
-        
-        # Export to FBX
-        bpy.ops.export_scene.fbx(filepath=filename, use_selection=True, add_leaf_bones=False)
-"""
+
     def render(self, img, verts, cam, angle=None, axis=None, mesh_filename=None, color=[1.0, 1.0, 0.9]):
         mesh = trimesh.Trimesh(vertices=verts, faces=self.faces, process=False)
         Rx = trimesh.transformations.rotation_matrix(math.radians(180), [1, 0, 0])
