@@ -80,12 +80,17 @@ bone_name_from_index = {
 # Source: smpl/plugins/blender/corrective_bpy_sh.py
 def Rodrigues(rotvec):
     theta = np.linalg.norm(rotvec)
-    r = (rotvec/theta).reshape(3, 1) if theta > 0. else rotvec
-    cost = np.cos(theta)
-    mat = np.asarray([[0, -r[2], r[1]],
-                      [r[2], 0, -r[0]],
-                      [-r[1], r[0], 0]])
-    return(cost*np.eye(3) + (1-cost)*r.dot(r.T) + np.sin(theta)*mat)
+    if theta > 0:
+        r = (rotvec / theta).reshape(3, 1)
+        cost = np.cos(theta)
+        mat = np.asarray([
+            [0, -r[2][0], r[1][0]],
+            [r[2][0], 0, -r[0][0]],
+            [-r[1][0], r[0][0], 0]
+        ])
+        return cost * np.eye(3) + (1 - cost) * r.dot(r.T) + np.sin(theta) * mat
+    else:
+        return np.eye(3)
 
 
 # Setup scene
