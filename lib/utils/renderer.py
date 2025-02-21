@@ -27,7 +27,6 @@ class WeakPerspectiveCamera(pyrender.Camera):
         super(WeakPerspectiveCamera, self).__init__(znear=znear, zfar=zfar, name=name)
         self.scale = scale
         self.translation = translation
-        print(f"Initial camera position: scale={self.scale}, translation={self.translation}")
 
     def get_projection_matrix(self, width=None, height=None):
         P = np.eye(4)
