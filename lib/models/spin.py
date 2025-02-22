@@ -351,6 +351,10 @@ def perspective_projection(points, rotation, translation,
     # Apply camera intrinsics
     projected_points = torch.einsum('bij,bkj->bki', K, projected_points)
 
+    # Ensure focal_length is a list
+    if isinstance(focal_length, float):
+        focal_length = [focal_length]
+
     data = {
         "rotation": rotation.tolist(),
         "translation": translation.tolist(),
