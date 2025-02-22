@@ -370,7 +370,7 @@ def perspective_projection(points, rotation, translation,
     euler_angles = torch.stack([x, y, z], dim=1)
 
     data = {
-        "rotation": euler_angles,
+        "rotation": euler_angles.cpu().numpy().tolist(),
         "translation": translation.tolist(),
         "focal_length": focal_length
     }
