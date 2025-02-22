@@ -24,9 +24,9 @@ def main(args):
     image_folder, num_frames, img_shape = video_to_images(video_file, return_info=True)
     original_image_path = os.path.join(image_folder, '000001.png')
     original_image = cv2.imread(original_image_path)
-    cv2.imshow('Original Image', original_image)
-    cv2.waitKey(0)
-    cv2.destroyAllWindows()
+    output_image_path = os.path.join(output_path, 'original_image.png')
+    cv2.imwrite(output_image_path, original_image)
+    print(f'Original image saved to {output_image_path}')
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
