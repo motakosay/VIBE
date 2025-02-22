@@ -355,8 +355,22 @@ def perspective_projection(points, rotation, translation,
     if isinstance(focal_length, float):
         focal_length = [focal_length]
 
+    # Convert rotation matrix to Euler angles (x, y, z)
+    sy = torch.sqrt(rotation[:, 0, 0]**2 + rotation[:, 1, 0]**2)
+    singular = sy < 1e-6
+
+    x = torch.atan2(rotation[:, 2, 1], rotation[:, 2, 2])
+    y = torch.atan2(-rotation[:, 2, 0], sy)
+    z = torch.atan2(rotation[:, 1, 0], rotation[:, 0, 0])
+
+    x[singular] = torch.atan2(-rotation[singular, 1, 2], rotation[singular, 1, 1])
+    y[singular] = torch.atan2(-rotation[singular, 2, 0], sy[singular])
+    z[singular] = 0
+
+    euler_angles = torch.stack([x, y, z], dim=1)
+
     data = {
-        "rotation": rotation.tolist(),
+        "rotation": euler_angles,
         "translation": translation.tolist(),
         "focal_length": focal_length
     }
