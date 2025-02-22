@@ -358,7 +358,7 @@ def perspective_projection(points, rotation, translation,
     data = {
         "rotation": rotation.tolist(),
         "translation": translation.tolist(),
-        "focal_length": focal_length.tolist()
+        "focal_length": focal_length
     }
     # Save data to json file
     with open('projection_data.json', 'w') as f:
