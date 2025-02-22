@@ -372,7 +372,7 @@ def perspective_projection(points, rotation, translation,
     data = {
         "rotation": euler_angles.cpu().numpy().tolist(),
         "translation": translation.tolist(),
-        "focal_length": focal_length
+        "focal_length": focal_length,
         "projected_points": projected_points_list
     }
     # Save data to json file
