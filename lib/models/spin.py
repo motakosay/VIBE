@@ -2,6 +2,7 @@
 # Adhere to their licence to use this script
 
 import math
+import json
 import torch
 import numpy as np
 import os.path as osp
@@ -349,6 +350,15 @@ def perspective_projection(points, rotation, translation,
 
     # Apply camera intrinsics
     projected_points = torch.einsum('bij,bkj->bki', K, projected_points)
+
+    data = {
+        "rotation": rotation.tolist(),
+        "translation": translation.tolist(),
+        "focal_length": focal_length.tolist()
+    }
+    # Save data to json file
+    with open('projection_data.json', 'w') as f:
+        json.dump(data, f)
 
     return projected_points[:, :, :-1]
 
