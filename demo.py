@@ -51,6 +51,30 @@ from lib.utils.demo_utils import (
 MIN_NUM_FRAMES = 25
 
 
+# Add this function to display bounding boxes
+def display_bounding_boxes(image_folder, tracking_results):
+    colors = {}
+    for person_id in tracking_results.keys():
+        colors[person_id] = (int(np.random.rand() * 255), int(np.random.rand() * 255), int(np.random.rand() * 255))
+
+    image_file_names = sorted([os.path.join(image_folder, x) for x in os.listdir(image_folder) if x.endswith('.png') or x.endswith('.jpg')])
+
+    for frame_idx, file_name in enumerate(image_file_names):
+        img = cv2.imread(file_name)
+        for person_id, data in tracking_results.items():
+            frame_indices = data['frames']
+            if frame_idx in frame_indices:
+                bbox_idx = list(frame_indices).index(frame_idx)
+                bbox = data['bbox'][bbox_idx]
+                x1, y1, x2, y2 = bbox
+                cv2.rectangle(img, (int(x1), int(y1)), (int(x2), int(y2)), colors[person_id], 2)
+                cv2.putText(img, str(person_id), (int(x1), int(y1) - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.9, colors[person_id], 2)
+        cv2.imshow('Bounding Boxes', img)
+        if cv2.waitKey(1) & 0xFF == ord('q'):
+            break
+    cv2.destroyAllWindows()
+
+
 def main(args):
     device = torch.device('cuda') if torch.cuda.is_available() else torch.device('cpu')
 
@@ -96,6 +120,8 @@ def main(args):
             yolo_img_size=args.yolo_img_size,
         )
         tracking_results = mot(image_folder)
+        
+    display_bounding_boxes(image_folder, tracking_results)
 
     # remove tracklets if num_frames is less than MIN_NUM_FRAMES
     for person_id in list(tracking_results.keys()):
